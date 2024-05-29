@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">STUFF MANAGEMENT</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar navbar-expand-lg" id="navbarNavDropdown">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Dropdown link
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="form-group container mt-5">
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Name of stuff"
+            id="name"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Price of stuff"
+            id="price"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <select
+            class="form-control"
+            id="category"
+            placeholder="Select Category"
+          ></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <button
+            type="button"
+            id="saveButton"
+            class="btn btn-success"
+            onclick="SaveStuff()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+    <table class="table table-bordered mt-3 container">
+      <thead class="thead-light">
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="result">
+        <!-- Dynamic content will be injected here -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" align="right"><strong>Total:</strong></td>
+          <td id="totalPrice">$0</td>
+          <!-- Total price will be displayed here -->
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      let currentUpdateId = null;
+
+      const GetCategories = async () => {
+        await axios
+          .get("http://localhost:3001/category")
+          .then((response) => {
+            const categories = response.data;
+            let options = "";
+            categories.forEach((category) => {
+              options += `<option value="${category.name}">${category.name}</option>`;
+            });
+            document.getElementById("category").innerHTML = options;
+          })
+          .catch((error) => {
+            console.error("Error fetching categories: ", error);
+          });
+      };
+
+      GetCategories(); // Fetch categories when the page loads
+
+      const calculateTotalPrice = (stuffs) => {
+        let totalPrice = 0;
+        stuffs.forEach((stuff) => {
+          totalPrice += parseFloat(stuff.price);
+        });
+        document.getElementById("totalPrice").innerText =
+          "$" + totalPrice.toFixed(2);
+      };
+
+      // Function to get stuffs and calculate total price
+      const GetStuff = async () => {
+        await axios
+          .get("http://localhost:3000/stuff")
+          .then((response) => {
+            console.log(response.data);
+            const stuffs = response.data;
+            let bucket = "";
+            stuffs.forEach((stuff, index) => {
+              bucket += `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${stuff.name}</td>
+            <td>${stuff.category}</td>
+            <td>$${stuff.price}</td>
+            <td>
+              <button type="button" class="btn btn-warning" onclick="EditData('${
+                stuff.id
+              }')">Edit</button>
+                <button type="button" class="btn btn-danger" onclick="DeleteData('${
+                  stuff.id
+                }')">Delete</button>
+            </td>
+        </tr>`;
+            });
+            document.getElementById("result").innerHTML = bucket;
+            calculateTotalPrice(stuffs); // Call function to calculate total price
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      };
+
+      GetStuff();
+
+      const SaveStuff = async () => {
+        let name = document.getElementById("name").value;
+        let price = document.getElementById("price").value;
+        let category = document.getElementById("category").value;
+        await axios
+          .post("http://localhost:3000/stuff", {
+            name: name,
+            price: price,
+            category: category,
+          })
+          .then((response) => {
+            console.log(response);
+            GetStuff(); // Refresh the list after saving
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      };
+
+      const DeleteData = async (id) => {
+        if (confirm("Are you sure you want to delete this item?")) {
+          await axios
+            .delete(`http://localhost:3000/stuff/${id}`)
+            .then((response) => {
+              console.log(response);
+              GetStuff(); // Refresh the list after deletion
+            })
+            .catch((error) => {
+              alert(error.message);
+            });
+        }
+      };
+
+      // Function to populate input fields with data to edit
+      const EditData = async (id) => {
+        await axios
+          .get(`http://localhost:3000/stuff/${id}`)
+          .then((response) => {
+            const data = response.data;
+            document.getElementById("name").value = data.name;
+            document.getElementById("price").value = data.price;
+            document.getElementById("category").value = data.category;
+            // Change Save button to Update button
+            const saveButton = document.getElementById("saveButton");
+            saveButton.innerText = "Update";
+            saveButton.onclick = () => UpdateStuff(id); // Change onclick behavior to call UpdateStuff
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      };
+
+      // Function to update existing data
+      const UpdateStuff = async (id) => {
+        let name = document.getElementById("name").value;
+        let price = document.getElementById("price").value;
+        let category = document.getElementById("category").value;
+        await axios
+          .put(`http://localhost:3000/stuff/${id}`, {
+            name: name,
+            price: price,
+            category: category,
+          })
+          .then((response) => {
+            console.log(response);
+            GetStuff(); // Refresh the list after updating
+            // Reset input fields
+            document.getElementById("name").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("category").value = "Furniture";
+            // Change Update button back to Save button
+            const saveButton = document.getElementById("saveButton");
+            saveButton.innerHTML = "Save";
+            saveButton.onclick = SaveStuff; // Change onclick behavior back to SaveStuff
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
