@@ -5,138 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <style>
+      .dropdown-content {
+        background-color: #edf2f7; /* Background color for dropdown */
+        border: 1px solid #cbd5e0; /* Border color */
+        display: none; /* Initially hidden */
+        position: absolute;
+        z-index: 1000;
+        top: 3rem; /* Adjust this value based on your design */
+        right: 1rem; /* Adjust this value based on your design */
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">STUFF MANAGEMENTT</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar navbar-expand-lg" id="navbarNavDropdown">
-          <ul class="navbar-nav ms-auto">
+    <nav class="bg-gray-800 p-4">
+      <div class="container mx-auto flex justify-between items-center relative">
+        <a class="text-white text-lg font-bold" href="#">STUFF MANAGEMENT</a>
+        <div class="hidden lg:flex lg:items-center" id="nav-content">
+          <ul class="flex flex-col lg:flex-row lg:ml-auto">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+              <a class="nav-link text-white px-4 py-2" href="index.html"
+                >Home</a
               >
-                Dropdown link
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </li>
-              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white px-4 py-2" href="category.html"
+                >Category</a
+              >
+            </li>
+          </ul>
+        </div>
+        <button
+          class="text-white block lg:hidden relative z-10"
+          id="nav-toggle"
+        >
+          <svg
+            class="fill-current h-6 w-6"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title>Menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+          </svg>
+        </button>
+        <div class="dropdown-content" id="dropdown-content">
+          <ul class="flex flex-col">
+            <li class="nav-item">
+              <a
+                class="nav-link text-gray-800 px-4 py-2 block border-b border-gray-300"
+                href="index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-gray-800 px-4 py-2 block"
+                href="category.html"
+                >Category</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <div class="form-group container mt-5">
-      <div class="row">
-        <div class="col-md-6 mb-2">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Name of stuff"
-            id="name"
-          />
-        </div>
+
+    <div class="container mx-auto mt-8">
+      <div class="form-group mb-4">
+        <input
+          type="text"
+          class="form-control block w-full p-2 border border-gray-300 rounded"
+          placeholder="Name of stuff"
+          id="name"
+        />
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-2">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="Price of stuff"
-            id="price"
-          />
-        </div>
+      <div class="form-group mb-4">
+        <input
+          type="number"
+          class="form-control block w-full p-2 border border-gray-300 rounded"
+          placeholder="Price of stuff"
+          id="price"
+        />
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-2">
-          <select
-            class="form-control"
-            id="category"
-            placeholder="Select Category"
-          ></select>
-        </div>
+      <div class="form-group mb-4">
+        <select
+          class="form-control block w-full p-2 border border-gray-300 rounded"
+          id="category"
+        >
+          <option value="" disabled selected>Select Category</option>
+        </select>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <button
-            type="button"
-            id="saveButton"
-            class="btn btn-success"
-            onclick="SaveStuff()"
-          >
-            Save
-          </button>
-        </div>
+      <div class="form-group">
+        <button
+          type="button"
+          id="saveButton"
+          class="bg-green-500 text-white px-4 py-2 rounded"
+          onclick="SaveStuff()"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          id="cancelButton"
+          class="bg-red-500 text-white px-4 py-2 rounded hidden"
+          onclick="CancelEdit()"
+        >
+          Cancel
+        </button>
       </div>
     </div>
-    <table class="table table-bordered mt-3 container">
-      <thead class="thead-light">
-        <tr>
-          <th>No.</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Price</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="result">
-        <!-- Dynamic content will be injected here -->
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3" align="right"><strong>Total:</strong></td>
-          <td id="totalPrice">$0</td>
-          <!-- Total price will be displayed here -->
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
+
+    <div class="container mx-auto mt-8">
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-800 text-white">
+            <th class="border border-gray-300 px-4 py-2">No.</th>
+            <th class="border border-gray-300 px-4 py-2">Name</th>
+            <th class="border border-gray-300 px-4 py-2">Category</th>
+            <th class="border border-gray-300 px-4 py-2">Price</th>
+            <th class="border border-gray-300 px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody id="result">
+          <!-- Dynamic content will be injected here -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td
+              colspan="3"
+              class="border border-gray-300 text-right px-4 py-2 font-bold"
+            >
+              Total:
+            </td>
+            <td id="totalPrice" class="border border-gray-300 px-4 py-2">$0</td>
+            <td class="border border-gray-300"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+      document
+        .getElementById("nav-toggle")
+        .addEventListener("click", function () {
+          var dropdownContent = document.getElementById("dropdown-content");
+          if (
+            dropdownContent.style.display === "none" ||
+            dropdownContent.style.display === ""
+          ) {
+            dropdownContent.style.display = "block";
+          } else {
+            dropdownContent.style.display = "none";
+          }
+        });
+
       let currentUpdateId = null;
 
       const GetCategories = async () => {
+        // Disable the category dropdown initially
+        document.getElementById("category").disabled = true;
+
         await axios
-          .get("http://localhost:3001/category")
+          .get("http://localhost:3000/category")
           .then((response) => {
             const categories = response.data;
-            let options = "";
+            let options =
+              "<option value='' disabled selected>Select Category</option>";
             categories.forEach((category) => {
               options += `<option value="${category.name}">${category.name}</option>`;
             });
             document.getElementById("category").innerHTML = options;
+
+            // Enable the category dropdown after categories are fetched
+            document.getElementById("category").disabled = false;
           })
           .catch((error) => {
             console.error("Error fetching categories: ", error);
@@ -164,20 +208,28 @@
             let bucket = "";
             stuffs.forEach((stuff, index) => {
               bucket += `
-        <tr>
-            <td>${index + 1}</td>
-            <td>${stuff.name}</td>
-            <td>${stuff.category}</td>
-            <td>$${stuff.price}</td>
-            <td>
-              <button type="button" class="btn btn-warning" onclick="EditData('${
-                stuff.id
-              }')">Edit</button>
-                <button type="button" class="btn btn-danger" onclick="DeleteData('${
-                  stuff.id
-                }')">Delete</button>
-            </td>
-        </tr>`;
+                  <tr>
+                      <td class="border border-gray-300 px-4 py-2">${
+                        index + 1
+                      }</td>
+                      <td class="border border-gray-300 px-4 py-2">${
+                        stuff.name
+                      }</td>
+                      <td class="border border-gray-300 px-4 py-2">${
+                        stuff.category
+                      }</td>
+                      <td class="border border-gray-300 px-4 py-2">$${
+                        stuff.price
+                      }</td>
+                      <td class="border border-gray-300 px-4 py-2">
+                        <button type="button" class="bg-yellow-500 text-white px-2 py-1 rounded" onclick="EditData('${
+                          stuff.id
+                        }')">Edit</button>
+                        <button type="button" class="bg-red-500 text-white px-2 py-1 rounded" onclick="DeleteData('${
+                          stuff.id
+                        }')">Delete</button>
+                      </td>
+                  </tr>`;
             });
             document.getElementById("result").innerHTML = bucket;
             calculateTotalPrice(stuffs); // Call function to calculate total price
@@ -193,6 +245,13 @@
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
         let category = document.getElementById("category").value;
+
+        // Check if category is selected
+        if (category === "") {
+          alert("Please select a category.");
+          return;
+        }
+
         await axios
           .post("http://localhost:3000/stuff", {
             name: name,
@@ -233,12 +292,23 @@
             document.getElementById("category").value = data.category;
             // Change Save button to Update button
             const saveButton = document.getElementById("saveButton");
+            const cancelButton = document.getElementById("cancelButton");
             saveButton.innerText = "Update";
+            cancelButton.classList.remove("hidden");
             saveButton.onclick = () => UpdateStuff(id); // Change onclick behavior to call UpdateStuff
           })
           .catch((error) => {
             alert(error.message);
           });
+      };
+
+      const CancelEdit = () => {
+        document.getElementById("name").value = "";
+        const saveButton = document.getElementById("saveButton");
+        const cancelButton = document.getElementById("cancelButton");
+        saveButton.innerText = "Save";
+        cancelButton.classList.add("hidden");
+        saveButton.onclick = SaveStuff; // Change onclick behavior back to SaveStuff
       };
 
       // Function to update existing data
@@ -255,23 +325,12 @@
           .then((response) => {
             console.log(response);
             GetStuff(); // Refresh the list after updating
-            // Reset input fields
-            document.getElementById("name").value = "";
-            document.getElementById("price").value = "";
-            document.getElementById("category").value = "Furniture";
-            // Change Update button back to Save button
-            const saveButton = document.getElementById("saveButton");
-            saveButton.innerHTML = "Save";
-            saveButton.onclick = SaveStuff; // Change onclick behavior back to SaveStuff
+            CancelEdit(); // Clear input fields and reset buttons
           })
           .catch((error) => {
             alert(error.message);
           });
       };
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>

@@ -1,0 +1,38 @@
+{
+  "stuff": [
+    {
+      "name": "KFC",
+      "price": "2.00",
+      "category": "Food",
+      "id": "7b83"
+    },
+    {
+      "name": "Pepsi",
+      "price": "2.00",
+      "category": "Drink",
+      "id": "9ca2"
+    },
+    {
+      "name": "Fanta",
+      "price": "2.00",
+      "category": "Drink",
+      "id": "7b07"
+    },
+    {
+      "name": "french fries",
+      "price": "1.50",
+      "category": "Food",
+      "id": "f483"
+    }
+  ],
+  "category": [
+    {
+      "name": "Food",
+      "id": "f26c"
+    },
+    {
+      "name": "Drink",
+      "id": "7510"
+    }
+  ]
+}
